@@ -122,12 +122,13 @@
         }
 
         const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
-        const foodColors = {
-            'corn': '#FFD700',
-            'tomato': '#FF6347',
-            'carrot': '#FFA500',
-            'lettuce': '#90EE90'
-        };
+        const foodImages = {};
+
+        // Load food SVGs
+        foodTypes.forEach(type => {
+            foodImages[type] = new Image();
+            foodImages[type].src = `${type}.svg`;
+        });
 
         function createFallingFood() {
             const type = foodTypes[Math.floor(Math.random() * foodTypes.length)];
@@ -259,15 +260,13 @@
 
             // Draw falling food
             gameState.fallingFood.forEach(food => {
-                ctx.fillStyle = foodColors[food.type];
-                ctx.fillRect(food.x, food.y, food.width, food.height);
+                ctx.drawImage(foodImages[food.type], food.x, food.y, food.width, food.height);
             });
 
             // Draw target food
             ctx.fillStyle = 'white';
             ctx.fillRect(10, 10, 60, 60);
-            ctx.fillStyle = foodColors[gameState.targetFood];
-            ctx.fillRect(20, 20, 40, 40);
+            ctx.drawImage(foodImages[gameState.targetFood], 20, 20, 40, 40);
             ctx.fillStyle = 'black';
             ctx.font = '16px Arial';
             ctx.fillText('Target:', 10, 90);
