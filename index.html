@@ -41,6 +41,7 @@
     </div>
     <canvas id="gameCanvas"></canvas>
     <audio id="targetSound" src="target_sound.mp3"></audio>
+    <audio id="splatSound" src="splat.wav"></audio>
     <script>
         // Get the canvas element
         const canvas = document.getElementById('gameCanvas');
@@ -228,6 +229,8 @@
                     // Remove food if it's fully squished
                     if (food.height <= 5) {
                         gameState.fallingFood.splice(index, 1);
+                        // Play splat sound when food hits the ground
+                        document.getElementById('splatSound').play();
                         if (food.type === gameState.targetFood) {
                             gameState.missedFood++;
                             
