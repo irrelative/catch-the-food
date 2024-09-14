@@ -1,5 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <path d="M50,10 L80,80 Q50,100 20,80 Z" fill="#FFA500" />
-  <path d="M50,20 Q60,40 50,60 M50,20 Q40,40 50,60" fill="none" stroke="#FF8C00" stroke-width="2" />
-  <path d="M40,10 Q50,0 60,10 L50,20 Z" fill="#228B22" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 100 100"
+   width="100"
+   height="100"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="carrot.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="6.88"
+     inkscape:cx="50"
+     inkscape:cy="50"
+     inkscape:window-width="1392"
+     inkscape:window-height="1027"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3" />
+  <path
+     d="M 50.263152,89.999134 19.803285,20.198013 Q 49.67106,0.00108203 79.801987,19.803285 Z"
+     fill="#ffa500"
+     id="path1" />
+  <path
+     d="M50,20 Q60,40 50,60 M50,20 Q40,40 50,60"
+     fill="none"
+     stroke="#FF8C00"
+     stroke-width="2"
+     id="path2" />
+  <path
+     d="m 39.854651,5.494186 q 10,-10 20,0 l -10,10 z"
+     fill="#228b22"
+     id="path3" />
 </svg>
