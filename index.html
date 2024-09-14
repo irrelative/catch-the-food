@@ -40,7 +40,12 @@
 
         // Game state
         let gameState = {
-            // Add game state variables here
+            farmItems: [
+                { type: 'corn', x: 100, y: 300, width: 80, height: 120 },
+                { type: 'tomato', x: 300, y: 350, width: 60, height: 60 },
+                { type: 'carrot', x: 500, y: 400, width: 40, height: 80 },
+                { type: 'lettuce', x: 700, y: 380, width: 70, height: 70 }
+            ]
         };
 
         // Game loop
@@ -59,11 +64,40 @@
         }
 
         function update() {
-            // Update game logic here
+            // Update game logic here (will be implemented later)
         }
 
         function draw() {
-            // Draw game objects here
+            // Draw sky
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ground
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+
+            // Draw grass
+            ctx.fillStyle = '#228B22';
+            ctx.fillRect(0, canvas.height - 120, canvas.width, 20);
+
+            // Draw farm items
+            gameState.farmItems.forEach(item => {
+                switch(item.type) {
+                    case 'corn':
+                        ctx.fillStyle = '#FFD700';
+                        break;
+                    case 'tomato':
+                        ctx.fillStyle = '#FF6347';
+                        break;
+                    case 'carrot':
+                        ctx.fillStyle = '#FFA500';
+                        break;
+                    case 'lettuce':
+                        ctx.fillStyle = '#90EE90';
+                        break;
+                }
+                ctx.fillRect(item.x, item.y, item.width, item.height);
+            });
         }
 
         // Start the game loop
