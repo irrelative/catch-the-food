@@ -53,6 +53,10 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
+        // Load kitty SVG
+        const kittyImage = new Image();
+        kittyImage.src = 'kitty.svg';
+
         // Game state
         let gameState = {
             fallingFood: [],
@@ -60,7 +64,7 @@
                 x: 400,
                 y: canvas.height - 150,
                 width: 60,
-                height: 40,
+                height: 60,
                 speed: 5
             },
             score: 0,
@@ -223,18 +227,7 @@
         }
 
         function drawKitty() {
-            ctx.fillStyle = '#FFA500'; // Orange color for the kitty
-            ctx.fillRect(gameState.kitty.x, gameState.kitty.y, gameState.kitty.width, gameState.kitty.height);
-            
-            // Draw eyes
-            ctx.fillStyle = 'white';
-            ctx.fillRect(gameState.kitty.x + 10, gameState.kitty.y + 5, 10, 10);
-            ctx.fillRect(gameState.kitty.x + 40, gameState.kitty.y + 5, 10, 10);
-            
-            // Draw pupils
-            ctx.fillStyle = 'black';
-            ctx.fillRect(gameState.kitty.x + 13, gameState.kitty.y + 8, 4, 4);
-            ctx.fillRect(gameState.kitty.x + 43, gameState.kitty.y + 8, 4, 4);
+            ctx.drawImage(kittyImage, gameState.kitty.x, gameState.kitty.y, gameState.kitty.width, gameState.kitty.height);
         }
 
         function draw() {
