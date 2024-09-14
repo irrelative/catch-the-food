@@ -164,11 +164,14 @@
         // Touch controls
         let touchStartX = 0;
         canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             touchStartX = e.touches[0].clientX;
-        });
+        }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Prevent scrolling
+            e.preventDefault();
+            e.stopPropagation();
             const touchX = e.touches[0].clientX;
             const canvasRect = canvas.getBoundingClientRect();
             const canvasCenterX = canvasRect.left + canvasRect.width / 2;
@@ -183,12 +186,14 @@
                 keys['ArrowLeft'] = false;
                 keys['ArrowRight'] = false;
             }
-        });
+        }, { passive: false });
 
-        canvas.addEventListener('touchend', () => {
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             keys['ArrowLeft'] = false;
             keys['ArrowRight'] = false;
-        });
+        }, { passive: false });
 
         // Game loop
         function gameLoop() {
