@@ -105,7 +105,7 @@
                     y: canvas.height - 225,
                     width: 90,
                     height: 90,
-                    speed: 5
+                    speed: 300 // pixels per second
                 },
                 score: 0,
                 highScore: parseInt(localStorage.getItem('highScore')) || 0,
@@ -114,7 +114,9 @@
                 isGameOver: false,
                 groundColors: [],
                 targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)],
-                newHighScore: false
+                newHighScore: false,
+                foodSpawnTimer: 0,
+                foodSpawnInterval: 0.5 // Spawn food every 0.5 seconds
             };
             pauseBtn.textContent = 'Pause';
             // Reinitialize ground colors
@@ -146,7 +148,7 @@
                 y: -50,
                 width: 40,
                 height: 40,
-                speed: 2 + Math.random() * 2
+                speed: 120 + Math.random() * 120 // 120-240 pixels per second
             };
         }
 
@@ -185,42 +187,55 @@
             keys['ArrowRight'] = false;
         }, { passive: false });
 
-        // Game loop
-        function gameLoop() {
+        let lastTime = 0;
+        const fixedDeltaTime = 1000 / 60; // 60 FPS
+        let accumulator = 0;
+
+        function gameLoop(currentTime) {
+            if (lastTime === 0) {
+                lastTime = currentTime;
+            }
+
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            accumulator += deltaTime;
+
+            while (accumulator >= fixedDeltaTime) {
+                if (!gameState.isPaused && !gameState.isGameOver) {
+                    update(fixedDeltaTime / 1000); // Convert to seconds
+                }
+                accumulator -= fixedDeltaTime;
+            }
+
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (!gameState.isPaused) {
-                // Update game state
-                update();
-            }
 
             // Draw game objects
             draw();
 
-            // Request next frame
             requestAnimationFrame(gameLoop);
         }
 
-        function update() {
-            if (gameState.isGameOver) return;
-
+        function update(dt) {
             // Move kitty based on keyboard input
             if (keys['ArrowLeft'] && gameState.kitty.x > 0) {
-                gameState.kitty.x -= gameState.kitty.speed;
+                gameState.kitty.x -= gameState.kitty.speed * dt;
             }
             if (keys['ArrowRight'] && gameState.kitty.x < canvas.width - gameState.kitty.width) {
-                gameState.kitty.x += gameState.kitty.speed;
+                gameState.kitty.x += gameState.kitty.speed * dt;
             }
 
             // Add new falling food
-            if (Math.random() < 0.02) {
+            gameState.foodSpawnTimer += dt;
+            if (gameState.foodSpawnTimer >= gameState.foodSpawnInterval) {
                 gameState.fallingFood.push(createFallingFood());
+                gameState.foodSpawnTimer = 0;
             }
 
             // Update falling food
             gameState.fallingFood.forEach((food, index) => {
-                food.y += food.speed;
+                food.y += food.speed * dt;
 
                 // Check for collision with kitty
                 if (food.y + food.height > gameState.kitty.y &&
@@ -239,8 +254,8 @@
 
                 // Squish food if it reaches the ground
                 if (food.y + food.height >= canvas.height - 100) {
-                    food.height = Math.max(5, food.height - food.speed);
-                    food.width = Math.min(60, food.width + food.speed);
+                    food.height = Math.max(5, food.height - food.speed * dt);
+                    food.width = Math.min(60, food.width + food.speed * dt);
                     food.y = canvas.height - 100 - food.height;
 
                     // Change ground color
@@ -364,7 +379,7 @@
         restartGame();
 
         // Start the game loop
-        gameLoop();
+        requestAnimationFrame(gameLoop);
     </script>
 </body>
 </html>
