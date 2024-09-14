@@ -68,11 +68,13 @@
                 speed: 5
             },
             score: 0,
+            highScore: parseInt(localStorage.getItem('highScore')) || 0,
             missedFood: 0,
             isPaused: false,
             isGameOver: false,
             groundColors: [],
-            targetFood: ''
+            targetFood: '',
+            newHighScore: false
         };
 
         // Initialize ground colors
@@ -104,11 +106,13 @@
                     speed: 5
                 },
                 score: 0,
+                highScore: parseInt(localStorage.getItem('highScore')) || 0,
                 missedFood: 0,
                 isPaused: false,
                 isGameOver: false,
                 groundColors: [],
-                targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)]
+                targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)],
+                newHighScore: false
             };
             pauseBtn.textContent = 'Pause';
             // Reinitialize ground colors
@@ -219,6 +223,11 @@
                             
                             if (gameState.missedFood > 10) {
                                 gameState.isGameOver = true;
+                                if (gameState.score > gameState.highScore) {
+                                    gameState.highScore = gameState.score;
+                                    localStorage.setItem('highScore', gameState.highScore);
+                                    gameState.newHighScore = true;
+                                }
                             }
                         }
                     }
@@ -267,7 +276,8 @@
             ctx.fillStyle = 'black';
             ctx.font = '20px Arial';
             ctx.fillText(`Score: ${gameState.score}`, 80, 30);
-            ctx.fillText(`Missed: ${gameState.missedFood}`, 80, 60);
+            ctx.fillText(`High Score: ${gameState.highScore}`, 80, 60);
+            ctx.fillText(`Missed: ${gameState.missedFood}`, 80, 90);
 
             // Draw pause message
             if (gameState.isPaused) {
@@ -287,10 +297,16 @@
                 ctx.fillStyle = 'white';
                 ctx.font = '40px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 60);
                 ctx.font = '30px Arial';
-                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
-                ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 60);
+                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2);
+                if (gameState.newHighScore) {
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillText('New High Score!', canvas.width / 2, canvas.height / 2 + 40);
+                    ctx.fillStyle = 'white';
+                }
+                ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 80);
+                ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 120);
                 ctx.textAlign = 'left';
             }
         }
