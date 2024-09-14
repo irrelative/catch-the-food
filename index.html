@@ -187,6 +187,8 @@
                     food.x < gameState.kitty.x + gameState.kitty.width) {
                     if (food.type === gameState.targetFood) {
                         gameState.score += 10;
+                        // Change target food after successful catch
+                        gameState.targetFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
                     } else {
                         gameState.missedFood++;
                     }
