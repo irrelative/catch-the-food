@@ -45,8 +45,26 @@
                 { type: 'tomato', x: 300, y: 350, width: 60, height: 60 },
                 { type: 'carrot', x: 500, y: 400, width: 40, height: 80 },
                 { type: 'lettuce', x: 700, y: 380, width: 70, height: 70 }
-            ]
+            ],
+            kitty: {
+                x: 400,
+                y: canvas.height - 150,
+                width: 60,
+                height: 40,
+                speed: 5
+            }
         };
+
+        // Keyboard state
+        let keys = {};
+
+        // Event listeners for keyboard input
+        window.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
 
         // Game loop
         function gameLoop() {
@@ -64,7 +82,28 @@
         }
 
         function update() {
-            // Update game logic here (will be implemented later)
+            // Move kitty based on keyboard input
+            if (keys['ArrowLeft'] && gameState.kitty.x > 0) {
+                gameState.kitty.x -= gameState.kitty.speed;
+            }
+            if (keys['ArrowRight'] && gameState.kitty.x < canvas.width - gameState.kitty.width) {
+                gameState.kitty.x += gameState.kitty.speed;
+            }
+        }
+
+        function drawKitty() {
+            ctx.fillStyle = '#FFA500'; // Orange color for the kitty
+            ctx.fillRect(gameState.kitty.x, gameState.kitty.y, gameState.kitty.width, gameState.kitty.height);
+            
+            // Draw eyes
+            ctx.fillStyle = 'white';
+            ctx.fillRect(gameState.kitty.x + 10, gameState.kitty.y + 5, 10, 10);
+            ctx.fillRect(gameState.kitty.x + 40, gameState.kitty.y + 5, 10, 10);
+            
+            // Draw pupils
+            ctx.fillStyle = 'black';
+            ctx.fillRect(gameState.kitty.x + 13, gameState.kitty.y + 8, 4, 4);
+            ctx.fillRect(gameState.kitty.x + 43, gameState.kitty.y + 8, 4, 4);
         }
 
         function draw() {
@@ -79,6 +118,9 @@
             // Draw grass
             ctx.fillStyle = '#228B22';
             ctx.fillRect(0, canvas.height - 120, canvas.width, 20);
+
+            // Draw kitty
+            drawKitty();
 
             // Draw farm items
             gameState.farmItems.forEach(item => {
