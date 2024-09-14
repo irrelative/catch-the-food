@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 100 100"
+   width="100"
+   height="100"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="kitty.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="6.88"
+     inkscape:cx="50"
+     inkscape:cy="50"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <!-- Face -->
+  <ellipse
+     cx="50"
+     cy="58.139534"
+     fill="#ffa500"
+     id="circle1"
+     rx="45"
+     ry="36.860466"
+     style="stroke-width:0.905053" />
+  <!-- Left Eye -->
+  <circle
+     cx="35"
+     cy="40"
+     r="10"
+     fill="white"
+     id="circle2" />
+  <circle
+     cx="35"
+     cy="40"
+     r="5"
+     fill="black"
+     id="circle3" />
+  <!-- Right Eye -->
+  <circle
+     cx="65"
+     cy="40"
+     r="10"
+     fill="white"
+     id="circle4" />
+  <circle
+     cx="65"
+     cy="40"
+     r="5"
+     fill="black"
+     id="circle5" />
+  <!-- Mouth -->
+  <path
+     d="M 40 70 Q 50 80 60 70"
+     fill="none"
+     stroke="black"
+     stroke-width="3"
+     id="path5" />
+  <!-- Left Eyebrow -->
+  <!-- Right Eyebrow -->
+  <!-- Left Ear -->
+  <path
+     d="M 12.957754,31.573134 22.116618,8.3112507 41.883544,23.617087 Z"
+     fill="#ffa500"
+     stroke="#000000"
+     stroke-width="2"
+     id="path8" />
+  <path
+     d="M 60.746902,52.881096 51.195885,66.038243 41.542647,52.95965 Z"
+     fill="#ffa500"
+     stroke="#000000"
+     stroke-width="1.29595"
+     id="path8-0" />
+  <!-- Right Ear -->
+  <path
+     d="M 57.882981,21.194375 78.309274,6.7802635 86.427458,30.425456 Z"
+     fill="#ffa500"
+     stroke="#000000"
+     stroke-width="2"
+     id="path9" />
+</svg>

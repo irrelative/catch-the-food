@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch The Food</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin: 10px 0;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: calc(100% - 50px); /* Adjust based on header height */
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        #controls button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catch The Food</h1>
+    <div id="controls">
+        <button id="pauseBtn">Pause</button>
+        <button id="restartBtn">Restart</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <audio id="targetSound" src="target.wav"></audio>
+    <audio id="splatSound" src="splat.wav"></audio>
+    <script>
+        // Get the canvas element
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 50; // Adjust for header
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Load kitty SVG
+        const kittyImage = new Image();
+        kittyImage.src = 'kitty.svg';
+
+        // Game state
+        let gameState = {
+            fallingFood: [],
+            kitty: {
+                x: 400,
+                y: canvas.height - 225,
+                width: 90,
+                height: 90,
+                speed: 5
+            },
+            score: 0,
+            highScore: parseInt(localStorage.getItem('highScore')) || 0,
+            missedFood: 0,
+            isPaused: false,
+            isGameOver: false,
+            groundColors: [],
+            targetFood: '',
+            newHighScore: false
+        };
+
+        // Initialize ground colors
+        for (let i = 0; i < canvas.width; i++) {
+            gameState.groundColors.push('#8B4513');
+        }
+
+        // Get control buttons
+        const pauseBtn = document.getElementById('pauseBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // Event listeners for buttons
+        pauseBtn.addEventListener('click', togglePause);
+        restartBtn.addEventListener('click', restartGame);
+
+        function togglePause() {
+            gameState.isPaused = !gameState.isPaused;
+            pauseBtn.textContent = gameState.isPaused ? 'Resume' : 'Pause';
+        }
+
+        function restartGame() {
+            gameState = {
+                fallingFood: [],
+                kitty: {
+                    x: 400,
+                    y: canvas.height - 225,
+                    width: 90,
+                    height: 90,
+                    speed: 5
+                },
+                score: 0,
+                highScore: parseInt(localStorage.getItem('highScore')) || 0,
+                missedFood: 0,
+                isPaused: false,
+                isGameOver: false,
+                groundColors: [],
+                targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)],
+                newHighScore: false
+            };
+            pauseBtn.textContent = 'Pause';
+            // Reinitialize ground colors
+            for (let i = 0; i < canvas.width; i++) {
+                gameState.groundColors.push('#8B4513');
+            }
+        }
+
+        const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
+        const foodImages = {};
+        const foodColors = {
+            'corn': '#FFD700',
+            'tomato': '#FF6347',
+            'carrot': '#FFA500',
+            'lettuce': '#90EE90'
+        };
+
+        // Load food SVGs
+        foodTypes.forEach(type => {
+            foodImages[type] = new Image();
+            foodImages[type].src = `${type}.svg`;
+        });
+
+        function createFallingFood() {
+            const type = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+            return {
+                type: type,
+                x: Math.random() * (canvas.width - 40),
+                y: -50,
+                width: 40,
+                height: 40,
+                speed: 2 + Math.random() * 2
+            };
+        }
+
+        // Keyboard state
+        let keys = {};
+
+        // Event listeners for keyboard input
+        window.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+
+        // Game loop
+        function gameLoop() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!gameState.isPaused) {
+                // Update game state
+                update();
+            }
+
+            // Draw game objects
+            draw();
+
+            // Request next frame
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update() {
+            if (gameState.isGameOver) return;
+
+            // Move kitty based on keyboard input
+            if (keys['ArrowLeft'] && gameState.kitty.x > 0) {
+                gameState.kitty.x -= gameState.kitty.speed;
+            }
+            if (keys['ArrowRight'] && gameState.kitty.x < canvas.width - gameState.kitty.width) {
+                gameState.kitty.x += gameState.kitty.speed;
+            }
+
+            // Add new falling food
+            if (Math.random() < 0.02) {
+                gameState.fallingFood.push(createFallingFood());
+            }
+
+            // Update falling food
+            gameState.fallingFood.forEach((food, index) => {
+                food.y += food.speed;
+
+                // Check for collision with kitty
+                if (food.y + food.height > gameState.kitty.y &&
+                    food.y < gameState.kitty.y + gameState.kitty.height &&
+                    food.x + food.width > gameState.kitty.x &&
+                    food.x < gameState.kitty.x + gameState.kitty.width) {
+                    if (food.type === gameState.targetFood) {
+                        gameState.score += 10;
+                        // Play sound when target food is caught
+                        document.getElementById('targetSound').play();
+                        // Change target food after successful catch
+                        gameState.targetFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+                    }
+                    gameState.fallingFood.splice(index, 1);
+                }
+
+                // Squish food if it reaches the ground
+                if (food.y + food.height >= canvas.height - 100) {
+                    food.height = Math.max(5, food.height - food.speed);
+                    food.width = Math.min(60, food.width + food.speed);
+                    food.y = canvas.height - 100 - food.height;
+
+                    // Change ground color
+                    const groundX = Math.floor(food.x + food.width / 2);
+                    const colorWidth = Math.floor(food.width / 2);
+                    for (let i = Math.max(0, groundX - colorWidth); i < Math.min(canvas.width, groundX + colorWidth); i++) {
+                        gameState.groundColors[i] = foodColors[food.type];
+                    }
+
+                    // Remove food if it's fully squished
+                    if (food.height <= 5) {
+                        gameState.fallingFood.splice(index, 1);
+                        // Play splat sound when food hits the ground
+                        document.getElementById('splatSound').play();
+                        if (food.type === gameState.targetFood) {
+                            gameState.missedFood++;
+                            
+                            if (gameState.missedFood > 10) {
+                                gameState.isGameOver = true;
+                                if (gameState.score > gameState.highScore) {
+                                    gameState.highScore = gameState.score;
+                                    localStorage.setItem('highScore', gameState.highScore);
+                                    gameState.newHighScore = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawKitty() {
+            ctx.drawImage(kittyImage, gameState.kitty.x, gameState.kitty.y, gameState.kitty.width, gameState.kitty.height);
+        }
+
+        function draw() {
+            // Draw sky
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw colored ground
+            for (let i = 0; i < canvas.width; i++) {
+                ctx.fillStyle = gameState.groundColors[i];
+                ctx.fillRect(i, canvas.height - 100, 1, 100);
+            }
+
+            // Draw grass
+            ctx.fillStyle = '#228B22';
+            ctx.fillRect(0, canvas.height - 120, canvas.width, 20);
+
+            // Draw kitty
+            drawKitty();
+
+            // Draw falling food
+            gameState.fallingFood.forEach(food => {
+                ctx.drawImage(foodImages[food.type], food.x, food.y, food.width, food.height);
+            });
+
+            // Draw target food
+            ctx.fillStyle = 'white';
+            ctx.fillRect(10, 10, 60, 60);
+            ctx.drawImage(foodImages[gameState.targetFood], 20, 20, 40, 40);
+            ctx.fillStyle = 'black';
+            ctx.font = '16px Arial';
+            ctx.fillText('Target:', 10, 90);
+
+            // Draw score and missed food count
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${gameState.score}`, 80, 30);
+            ctx.fillText(`High Score: ${gameState.highScore}`, 80, 60);
+            ctx.fillText(`Missed: ${gameState.missedFood}`, 80, 90);
+
+            // Draw pause message
+            if (gameState.isPaused) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+                ctx.textAlign = 'left';
+            }
+
+            // Draw game over message
+            if (gameState.isGameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 60);
+                ctx.font = '30px Arial';
+                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2);
+                if (gameState.newHighScore) {
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillText('New High Score!', canvas.width / 2, canvas.height / 2 + 40);
+                    ctx.fillStyle = 'white';
+                }
+                ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 80);
+                ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 120);
+                ctx.textAlign = 'left';
+            }
+        }
+
+        // Initialize the game
+        restartGame();
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>
