@@ -189,8 +189,6 @@
                         gameState.score += 10;
                         // Change target food after successful catch
                         gameState.targetFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
-                    } else {
-                        gameState.missedFood++;
                     }
                     gameState.fallingFood.splice(index, 1);
                 }
@@ -211,10 +209,12 @@
                     // Remove food if it's fully squished
                     if (food.height <= 5) {
                         gameState.fallingFood.splice(index, 1);
-                        gameState.missedFood++;
-                        
-                        if (gameState.missedFood > 10) {
-                            gameState.isGameOver = true;
+                        if (food.type === gameState.targetFood) {
+                            gameState.missedFood++;
+                            
+                            if (gameState.missedFood > 10) {
+                                gameState.isGameOver = true;
+                            }
                         }
                     }
                 }
