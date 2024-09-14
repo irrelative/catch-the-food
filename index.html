@@ -63,8 +63,14 @@
                 speed: 5
             },
             score: 0,
-            isPaused: false
+            isPaused: false,
+            groundColors: []
         };
+
+        // Initialize ground colors
+        for (let i = 0; i < canvas.width; i++) {
+            gameState.groundColors.push('#8B4513');
+        }
 
         // Get control buttons
         const pauseBtn = document.getElementById('pauseBtn');
@@ -170,9 +176,23 @@
                     gameState.fallingFood.splice(index, 1);
                 }
 
-                // Remove food if it's off the screen
-                if (food.y > canvas.height) {
-                    gameState.fallingFood.splice(index, 1);
+                // Squish food if it reaches the ground
+                if (food.y + food.height >= canvas.height - 100) {
+                    food.height = Math.max(5, food.height - food.speed);
+                    food.width = Math.min(60, food.width + food.speed);
+                    food.y = canvas.height - 100 - food.height;
+
+                    // Change ground color
+                    const groundX = Math.floor(food.x + food.width / 2);
+                    const colorWidth = Math.floor(food.width / 2);
+                    for (let i = Math.max(0, groundX - colorWidth); i < Math.min(canvas.width, groundX + colorWidth); i++) {
+                        gameState.groundColors[i] = foodColors[food.type];
+                    }
+
+                    // Remove food if it's fully squished
+                    if (food.height <= 5) {
+                        gameState.fallingFood.splice(index, 1);
+                    }
                 }
             });
         }
@@ -197,9 +217,11 @@
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw ground
-            ctx.fillStyle = '#8B4513';
-            ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+            // Draw colored ground
+            for (let i = 0; i < canvas.width; i++) {
+                ctx.fillStyle = gameState.groundColors[i];
+                ctx.fillRect(i, canvas.height - 100, 1, 100);
+            }
 
             // Draw grass
             ctx.fillStyle = '#228B22';
