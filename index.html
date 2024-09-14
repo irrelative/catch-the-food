@@ -162,29 +162,19 @@
         });
 
         // Touch controls
-        let touchStartX = 0;
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            touchStartX = e.touches[0].clientX;
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const touchX = e.touches[0].clientX;
+            const touch = e.touches[0];
             const canvasRect = canvas.getBoundingClientRect();
             const canvasCenterX = canvasRect.left + canvasRect.width / 2;
 
-            if (touchX < canvasCenterX && touchStartX < canvasCenterX) {
+            if (touch.clientX < canvasCenterX) {
                 keys['ArrowLeft'] = true;
                 keys['ArrowRight'] = false;
-            } else if (touchX > canvasCenterX && touchStartX > canvasCenterX) {
-                keys['ArrowLeft'] = false;
-                keys['ArrowRight'] = true;
             } else {
                 keys['ArrowLeft'] = false;
-                keys['ArrowRight'] = false;
+                keys['ArrowRight'] = true;
             }
         }, { passive: false });
 
