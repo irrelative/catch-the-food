@@ -258,7 +258,7 @@
                         if (food.type === gameState.targetFood) {
                             gameState.missedFood++;
                             
-                            if (gameState.missedFood > 10) {
+                            if (gameState.missedFood >= 10) {
                                 gameState.isGameOver = true;
                                 if (gameState.score > gameState.highScore) {
                                     gameState.highScore = gameState.score;
