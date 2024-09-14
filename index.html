@@ -63,7 +63,9 @@
                 speed: 5
             },
             score: 0,
+            missedFood: 0,
             isPaused: false,
+            isGameOver: false,
             groundColors: []
         };
 
@@ -96,9 +98,16 @@
                     speed: 5
                 },
                 score: 0,
-                isPaused: false
+                missedFood: 0,
+                isPaused: false,
+                isGameOver: false,
+                groundColors: []
             };
             pauseBtn.textContent = 'Pause';
+            // Reinitialize ground colors
+            for (let i = 0; i < canvas.width; i++) {
+                gameState.groundColors.push('#8B4513');
+            }
         }
 
         const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
@@ -150,6 +159,8 @@
         }
 
         function update() {
+            if (gameState.isGameOver) return;
+
             // Move kitty based on keyboard input
             if (keys['ArrowLeft'] && gameState.kitty.x > 0) {
                 gameState.kitty.x -= gameState.kitty.speed;
@@ -192,6 +203,11 @@
                     // Remove food if it's fully squished
                     if (food.height <= 5) {
                         gameState.fallingFood.splice(index, 1);
+                        gameState.missedFood++;
+                        
+                        if (gameState.missedFood > 10) {
+                            gameState.isGameOver = true;
+                        }
                     }
                 }
             });
@@ -236,10 +252,11 @@
                 ctx.fillRect(food.x, food.y, food.width, food.height);
             });
 
-            // Draw score
+            // Draw score and missed food count
             ctx.fillStyle = 'black';
             ctx.font = '20px Arial';
             ctx.fillText(`Score: ${gameState.score}`, 10, 30);
+            ctx.fillText(`Missed: ${gameState.missedFood}`, 10, 60);
 
             // Draw pause message
             if (gameState.isPaused) {
@@ -249,6 +266,20 @@
                 ctx.font = '40px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+                ctx.textAlign = 'left';
+            }
+
+            // Draw game over message
+            if (gameState.isGameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
+                ctx.font = '30px Arial';
+                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
+                ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 60);
                 ctx.textAlign = 'left';
             }
         }
