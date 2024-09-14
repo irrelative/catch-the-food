@@ -40,6 +40,7 @@
         <button id="restartBtn">Restart</button>
     </div>
     <canvas id="gameCanvas"></canvas>
+    <audio id="targetSound" src="target_sound.mp3"></audio>
     <script>
         // Get the canvas element
         const canvas = document.getElementById('gameCanvas');
@@ -203,6 +204,8 @@
                     food.x < gameState.kitty.x + gameState.kitty.width) {
                     if (food.type === gameState.targetFood) {
                         gameState.score += 10;
+                        // Play sound when target food is caught
+                        document.getElementById('targetSound').play();
                         // Change target food after successful catch
                         gameState.targetFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
                     }
