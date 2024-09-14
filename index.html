@@ -40,20 +40,36 @@
 
         // Game state
         let gameState = {
-            farmItems: [
-                { type: 'corn', x: 100, y: 300, width: 80, height: 120 },
-                { type: 'tomato', x: 300, y: 350, width: 60, height: 60 },
-                { type: 'carrot', x: 500, y: 400, width: 40, height: 80 },
-                { type: 'lettuce', x: 700, y: 380, width: 70, height: 70 }
-            ],
+            fallingFood: [],
             kitty: {
                 x: 400,
                 y: canvas.height - 150,
                 width: 60,
                 height: 40,
                 speed: 5
-            }
+            },
+            score: 0
         };
+
+        const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
+        const foodColors = {
+            'corn': '#FFD700',
+            'tomato': '#FF6347',
+            'carrot': '#FFA500',
+            'lettuce': '#90EE90'
+        };
+
+        function createFallingFood() {
+            const type = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+            return {
+                type: type,
+                x: Math.random() * (canvas.width - 40),
+                y: -50,
+                width: 40,
+                height: 40,
+                speed: 2 + Math.random() * 2
+            };
+        }
 
         // Keyboard state
         let keys = {};
@@ -89,6 +105,30 @@
             if (keys['ArrowRight'] && gameState.kitty.x < canvas.width - gameState.kitty.width) {
                 gameState.kitty.x += gameState.kitty.speed;
             }
+
+            // Add new falling food
+            if (Math.random() < 0.02) {
+                gameState.fallingFood.push(createFallingFood());
+            }
+
+            // Update falling food
+            gameState.fallingFood.forEach((food, index) => {
+                food.y += food.speed;
+
+                // Check for collision with kitty
+                if (food.y + food.height > gameState.kitty.y &&
+                    food.y < gameState.kitty.y + gameState.kitty.height &&
+                    food.x + food.width > gameState.kitty.x &&
+                    food.x < gameState.kitty.x + gameState.kitty.width) {
+                    gameState.score += 10;
+                    gameState.fallingFood.splice(index, 1);
+                }
+
+                // Remove food if it's off the screen
+                if (food.y > canvas.height) {
+                    gameState.fallingFood.splice(index, 1);
+                }
+            });
         }
 
         function drawKitty() {
@@ -122,24 +162,16 @@
             // Draw kitty
             drawKitty();
 
-            // Draw farm items
-            gameState.farmItems.forEach(item => {
-                switch(item.type) {
-                    case 'corn':
-                        ctx.fillStyle = '#FFD700';
-                        break;
-                    case 'tomato':
-                        ctx.fillStyle = '#FF6347';
-                        break;
-                    case 'carrot':
-                        ctx.fillStyle = '#FFA500';
-                        break;
-                    case 'lettuce':
-                        ctx.fillStyle = '#90EE90';
-                        break;
-                }
-                ctx.fillRect(item.x, item.y, item.width, item.height);
+            // Draw falling food
+            gameState.fallingFood.forEach(food => {
+                ctx.fillStyle = foodColors[food.type];
+                ctx.fillRect(food.x, food.y, food.width, food.height);
             });
+
+            // Draw score
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${gameState.score}`, 10, 30);
         }
 
         // Start the game loop
