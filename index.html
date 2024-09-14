@@ -66,7 +66,8 @@
             missedFood: 0,
             isPaused: false,
             isGameOver: false,
-            groundColors: []
+            groundColors: [],
+            targetFood: ''
         };
 
         // Initialize ground colors
@@ -101,7 +102,8 @@
                 missedFood: 0,
                 isPaused: false,
                 isGameOver: false,
-                groundColors: []
+                groundColors: [],
+                targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)]
             };
             pauseBtn.textContent = 'Pause';
             // Reinitialize ground colors
@@ -183,7 +185,11 @@
                     food.y < gameState.kitty.y + gameState.kitty.height &&
                     food.x + food.width > gameState.kitty.x &&
                     food.x < gameState.kitty.x + gameState.kitty.width) {
-                    gameState.score += 10;
+                    if (food.type === gameState.targetFood) {
+                        gameState.score += 10;
+                    } else {
+                        gameState.missedFood++;
+                    }
                     gameState.fallingFood.splice(index, 1);
                 }
 
@@ -252,11 +258,20 @@
                 ctx.fillRect(food.x, food.y, food.width, food.height);
             });
 
+            // Draw target food
+            ctx.fillStyle = 'white';
+            ctx.fillRect(10, 10, 60, 60);
+            ctx.fillStyle = foodColors[gameState.targetFood];
+            ctx.fillRect(20, 20, 40, 40);
+            ctx.fillStyle = 'black';
+            ctx.font = '16px Arial';
+            ctx.fillText('Target:', 10, 90);
+
             // Draw score and missed food count
             ctx.fillStyle = 'black';
             ctx.font = '20px Arial';
-            ctx.fillText(`Score: ${gameState.score}`, 10, 30);
-            ctx.fillText(`Missed: ${gameState.missedFood}`, 10, 60);
+            ctx.fillText(`Score: ${gameState.score}`, 80, 30);
+            ctx.fillText(`Missed: ${gameState.missedFood}`, 80, 60);
 
             // Draw pause message
             if (gameState.isPaused) {
