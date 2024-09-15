@@ -116,6 +116,7 @@
             restartGame();
             gameState.characterSelection = false; // Ensure this is set to false
             lastTime = 0; // Reset lastTime to restart the game loop properly
+            console.log('Selected character after starting game:', selectedCharacter);
         }
 
         function restartGame() {
@@ -341,7 +342,11 @@
 
         function drawCharacter() {
             const characterImage = selectedCharacter === 'kitty' ? kittyImage : dogImage;
-            ctx.drawImage(characterImage, gameState.character.x, gameState.character.y, gameState.character.width, gameState.character.height);
+            if (characterImage.complete) {
+                ctx.drawImage(characterImage, gameState.character.x, gameState.character.y, gameState.character.width, gameState.character.height);
+            } else {
+                console.log('Character image not loaded:', selectedCharacter);
+            }
         }
 
         function draw() {
