@@ -114,7 +114,8 @@
             gameState.characterSelection = false;
             document.getElementById('controls').style.display = 'block';
             restartGame();
-            requestAnimationFrame(gameLoop);
+            gameState.characterSelection = false; // Ensure this is set to false
+            lastTime = 0; // Reset lastTime to restart the game loop properly
         }
 
         function restartGame() {
@@ -262,6 +263,12 @@
 
             requestAnimationFrame(gameLoop);
         }
+
+        // Start the game loop when the page loads
+        window.addEventListener('load', () => {
+            console.log('Page loaded, starting game loop');
+            requestAnimationFrame(gameLoop);
+        });
 
         function update(dt) {
             // Move character based on keyboard input
