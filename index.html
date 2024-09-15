@@ -64,6 +64,12 @@
         kittyImage.src = 'kitty.svg';
         const dogImage = new Image();
         dogImage.src = 'dog.svg';
+        const mouseImage = new Image();
+        mouseImage.src = 'mouse.svg';
+        const pigImage = new Image();
+        pigImage.src = 'pig.svg';
+        const foxImage = new Image();
+        foxImage.src = 'fox.svg';
 
         let selectedCharacter = null;
 
@@ -160,15 +166,26 @@
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                const centerY = canvas.height / 2;
                 const characterSize = 90;
                 const selectionAreaSize = 160;
 
-                if (y > centerY - selectionAreaSize / 2 && y < centerY + selectionAreaSize / 2) {
-                    if (x > canvas.width / 4 - characterSize / 2 && x < canvas.width / 4 + characterSize / 2) {
-                        startGame('kitty');
-                    } else if (x > 3 * canvas.width / 4 - characterSize / 2 && x < 3 * canvas.width / 4 + characterSize / 2) {
-                        startGame('dog');
+                const characters = ['kitty', 'dog', 'mouse', 'pig', 'fox'];
+                const rows = 2;
+                const cols = 3;
+
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < cols; j++) {
+                        const index = i * cols + j;
+                        if (index < characters.length) {
+                            const centerX = (j + 1) * canvas.width / (cols + 1);
+                            const centerY = (i + 1) * canvas.height / (rows + 1);
+
+                            if (x > centerX - characterSize / 2 && x < centerX + characterSize / 2 &&
+                                y > centerY - characterSize / 2 && y < centerY + characterSize / 2) {
+                                startGame(characters[index]);
+                                return;
+                            }
+                        }
                     }
                 }
             }
@@ -345,7 +362,27 @@
         }
 
         function drawCharacter() {
-            const characterImage = selectedCharacter === 'kitty' ? kittyImage : dogImage;
+            let characterImage;
+            switch (selectedCharacter) {
+                case 'kitty':
+                    characterImage = kittyImage;
+                    break;
+                case 'dog':
+                    characterImage = dogImage;
+                    break;
+                case 'mouse':
+                    characterImage = mouseImage;
+                    break;
+                case 'pig':
+                    characterImage = pigImage;
+                    break;
+                case 'fox':
+                    characterImage = foxImage;
+                    break;
+                default:
+                    console.log('Invalid character:', selectedCharacter);
+                    return;
+            }
             if (characterImage.complete) {
                 ctx.drawImage(characterImage, gameState.character.x, gameState.character.y, gameState.character.width, gameState.character.height);
             } else {
@@ -365,15 +402,30 @@
                 ctx.fillStyle = 'white';
                 ctx.font = '40px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('Choose Your Character', canvas.width / 2, canvas.height / 2 - 150);
+                ctx.fillText('Choose Your Character', canvas.width / 2, 60);
 
-                // Draw Kitty option
-                ctx.drawImage(kittyImage, canvas.width / 4 - 45, canvas.height / 2 - 45, 90, 90);
-                ctx.fillText('Kitty', canvas.width / 4, canvas.height / 2 + 80);
+                const characters = [
+                    { name: 'Kitty', image: kittyImage },
+                    { name: 'Dog', image: dogImage },
+                    { name: 'Mouse', image: mouseImage },
+                    { name: 'Pig', image: pigImage },
+                    { name: 'Fox', image: foxImage }
+                ];
+                const rows = 2;
+                const cols = 3;
 
-                // Draw Dog option
-                ctx.drawImage(dogImage, 3 * canvas.width / 4 - 45, canvas.height / 2 - 45, 90, 90);
-                ctx.fillText('Dog', 3 * canvas.width / 4, canvas.height / 2 + 80);
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < cols; j++) {
+                        const index = i * cols + j;
+                        if (index < characters.length) {
+                            const centerX = (j + 1) * canvas.width / (cols + 1);
+                            const centerY = (i + 1) * canvas.height / (rows + 1);
+
+                            ctx.drawImage(characters[index].image, centerX - 45, centerY - 45, 90, 90);
+                            ctx.fillText(characters[index].name, centerX, centerY + 80);
+                        }
+                    }
+                }
 
                 ctx.textAlign = 'left';
                 return;
