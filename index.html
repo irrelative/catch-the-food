@@ -47,10 +47,14 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        console.log('Canvas element:', canvas);
+        console.log('Canvas context:', ctx);
+
         // Set canvas size
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight - 50; // Adjust for header
+            console.log('Canvas resized:', canvas.width, 'x', canvas.height);
         }
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
@@ -105,6 +109,7 @@
         }
 
         function startGame(character) {
+            console.log('Starting game with character:', character);
             selectedCharacter = character;
             gameState.characterSelection = false;
             document.getElementById('controls').style.display = 'block';
@@ -226,6 +231,7 @@
         let accumulator = 0;
 
         function gameLoop(currentTime) {
+            console.log('Game loop running, current time:', currentTime);
             if (lastTime === 0) {
                 lastTime = currentTime;
             }
@@ -430,6 +436,13 @@
                 ctx.textAlign = 'left';
             }
         }
+    </script>
+    <script>
+        // Start the game loop when the page loads
+        window.addEventListener('load', () => {
+            console.log('Page loaded, starting game loop');
+            requestAnimationFrame(gameLoop);
+        });
     </script>
 </body>
 </html>
