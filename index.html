@@ -118,7 +118,7 @@
             console.log('Selected character after starting game:', selectedCharacter);
         }
 
-        function restartGame(character) {
+        function restartGame() {
             gameState = {
                 fallingFood: [],
                 character: {
@@ -138,16 +138,15 @@
                 newHighScore: false,
                 foodSpawnTimer: 0,
                 foodSpawnInterval: 0.5, // Spawn food every 0.5 seconds
-                characterSelection: false
+                characterSelection: true
             };
             pauseBtn.textContent = 'Pause';
             // Reinitialize ground colors
             for (let i = 0; i < canvas.width; i++) {
                 gameState.groundColors.push('#8B4513');
             }
-            if (character) {
-                selectedCharacter = character;
-            }
+            selectedCharacter = null;
+            document.getElementById('controls').style.display = 'none';
         }
 
         // Add event listener for character selection
