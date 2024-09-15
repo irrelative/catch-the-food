@@ -162,13 +162,9 @@
             }
         }
 
-        // Add event listener for character selection
-        canvas.addEventListener('click', (e) => {
+        // Function to handle character selection
+        function handleCharacterSelection(x, y) {
             if (gameState.characterSelection) {
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
                 const characterSize = 90;
                 const rows = 2;
                 const cols = 3;
@@ -193,7 +189,25 @@
                     }
                 }
             }
+        }
+
+        // Add event listener for character selection (mouse click)
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            handleCharacterSelection(x, y);
         });
+
+        // Add event listener for character selection (touch)
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            handleCharacterSelection(x, y);
+        }, { passive: false });
 
         const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
         const foodImages = {};
