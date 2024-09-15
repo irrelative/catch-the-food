@@ -34,12 +34,17 @@
     </style>
 </head>
 <body>
+    <div id="characterSelection" style="text-align: center; margin-top: 20px;">
+        <h2>Choose Your Character</h2>
+        <button id="kittyBtn" style="margin: 10px; padding: 10px;">Kitty</button>
+        <button id="dogBtn" style="margin: 10px; padding: 10px;">Dog</button>
+    </div>
     <h1>Catch The Food</h1>
-    <div id="controls">
+    <div id="controls" style="display: none;">
         <button id="pauseBtn">Pause</button>
         <button id="restartBtn">Restart</button>
     </div>
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" style="display: none;"></canvas>
     <audio id="targetSound" src="target.wav"></audio>
     <audio id="splatSound" src="splat.wav"></audio>
     <script>
@@ -55,19 +60,23 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Load kitty SVG
+        // Load character images
         const kittyImage = new Image();
         kittyImage.src = 'kitty.svg';
+        const dogImage = new Image();
+        dogImage.src = 'dog.svg';
+
+        let selectedCharacter = null;
 
         // Game state
         let gameState = {
             fallingFood: [],
-            kitty: {
+            character: {
                 x: canvas.width / 2 - 45, // Center horizontally
                 y: canvas.height - 225,
                 width: 90,
                 height: 90,
-                speed: 5
+                speed: 300 // pixels per second
             },
             score: 0,
             highScore: parseInt(localStorage.getItem('highScore')) || 0,
@@ -76,7 +85,9 @@
             isGameOver: false,
             groundColors: [],
             targetFood: '',
-            newHighScore: false
+            newHighScore: false,
+            foodSpawnTimer: 0,
+            foodSpawnInterval: 0.5 // Spawn food every 0.5 seconds
         };
 
         // Initialize ground colors
@@ -87,20 +98,33 @@
         // Get control buttons
         const pauseBtn = document.getElementById('pauseBtn');
         const restartBtn = document.getElementById('restartBtn');
+        const kittyBtn = document.getElementById('kittyBtn');
+        const dogBtn = document.getElementById('dogBtn');
 
         // Event listeners for buttons
         pauseBtn.addEventListener('click', togglePause);
         restartBtn.addEventListener('click', restartGame);
+        kittyBtn.addEventListener('click', () => startGame('kitty'));
+        dogBtn.addEventListener('click', () => startGame('dog'));
 
         function togglePause() {
             gameState.isPaused = !gameState.isPaused;
             pauseBtn.textContent = gameState.isPaused ? 'Resume' : 'Pause';
         }
 
+        function startGame(character) {
+            selectedCharacter = character;
+            document.getElementById('characterSelection').style.display = 'none';
+            document.getElementById('controls').style.display = 'block';
+            canvas.style.display = 'block';
+            restartGame();
+            requestAnimationFrame(gameLoop);
+        }
+
         function restartGame() {
             gameState = {
                 fallingFood: [],
-                kitty: {
+                character: {
                     x: canvas.width / 2 - 45, // Center horizontally
                     y: canvas.height - 225,
                     width: 90,
@@ -218,12 +242,12 @@
         }
 
         function update(dt) {
-            // Move kitty based on keyboard input
-            if (keys['ArrowLeft'] && gameState.kitty.x > 0) {
-                gameState.kitty.x -= gameState.kitty.speed * dt;
+            // Move character based on keyboard input
+            if (keys['ArrowLeft'] && gameState.character.x > 0) {
+                gameState.character.x -= gameState.character.speed * dt;
             }
-            if (keys['ArrowRight'] && gameState.kitty.x < canvas.width - gameState.kitty.width) {
-                gameState.kitty.x += gameState.kitty.speed * dt;
+            if (keys['ArrowRight'] && gameState.character.x < canvas.width - gameState.character.width) {
+                gameState.character.x += gameState.character.speed * dt;
             }
 
             // Add new falling food
@@ -237,11 +261,11 @@
             gameState.fallingFood.forEach((food, index) => {
                 food.y += food.speed * dt;
 
-                // Check for collision with kitty
-                if (food.y + food.height > gameState.kitty.y &&
-                    food.y < gameState.kitty.y + gameState.kitty.height &&
-                    food.x + food.width > gameState.kitty.x &&
-                    food.x < gameState.kitty.x + gameState.kitty.width) {
+                // Check for collision with character
+                if (food.y + food.height > gameState.character.y &&
+                    food.y < gameState.character.y + gameState.character.height &&
+                    food.x + food.width > gameState.character.x &&
+                    food.x < gameState.character.x + gameState.character.width) {
                     if (food.type === gameState.targetFood) {
                         gameState.score += 10;
                         // Play sound when target food is caught
@@ -287,8 +311,9 @@
             });
         }
 
-        function drawKitty() {
-            ctx.drawImage(kittyImage, gameState.kitty.x, gameState.kitty.y, gameState.kitty.width, gameState.kitty.height);
+        function drawCharacter() {
+            const characterImage = selectedCharacter === 'kitty' ? kittyImage : dogImage;
+            ctx.drawImage(characterImage, gameState.character.x, gameState.character.y, gameState.character.width, gameState.character.height);
         }
 
         function draw() {
@@ -306,8 +331,8 @@
             ctx.fillStyle = '#228B22';
             ctx.fillRect(0, canvas.height - 120, canvas.width, 20);
 
-            // Draw kitty
-            drawKitty();
+            // Draw character
+            drawCharacter();
 
             // Draw falling food
             gameState.fallingFood.forEach(food => {
@@ -374,12 +399,6 @@
                 ctx.textAlign = 'left';
             }
         }
-
-        // Initialize the game
-        restartGame();
-
-        // Start the game loop
-        requestAnimationFrame(gameLoop);
     </script>
 </body>
 </html>
