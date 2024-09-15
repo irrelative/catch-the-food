@@ -1,8 +1,72 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <path d="M50 10 C30 10 15 25 15 45 C15 65 30 80 50 80 C70 80 85 65 85 45 C85 25 70 10 50 10" fill="#8B4513"/>
-  <circle cx="35" cy="35" r="5" fill="black"/>
-  <circle cx="65" cy="35" r="5" fill="black"/>
-  <path d="M40 55 Q50 65 60 55" fill="none" stroke="black" stroke-width="3"/>
-  <path d="M25 25 Q15 15 5 25" fill="none" stroke="#8B4513" stroke-width="5"/>
-  <path d="M75 25 Q85 15 95 25" fill="none" stroke="#8B4513" stroke-width="5"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="dog.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="5.641178"
+     inkscape:cx="40.948894"
+     inkscape:cy="45.557861"
+     inkscape:window-width="1728"
+     inkscape:window-height="1051"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     d="M50 10 C30 10 15 25 15 45 C15 65 30 80 50 80 C70 80 85 65 85 45 C85 25 70 10 50 10"
+     fill="#8B4513"
+     id="path1" />
+  <circle
+     cx="35"
+     cy="35"
+     r="5"
+     fill="black"
+     id="circle1" />
+  <circle
+     cx="50.040665"
+     cy="46.304482"
+     r="5"
+     fill="#000000"
+     id="circle1-7" />
+  <circle
+     cx="65"
+     cy="35"
+     r="5"
+     fill="black"
+     id="circle2" />
+  <path
+     d="M40 55 Q50 65 60 55"
+     fill="none"
+     stroke="black"
+     stroke-width="3"
+     id="path2" />
+  <path
+     d="M25 25 Q15 15 5 25"
+     fill="none"
+     stroke="#8B4513"
+     stroke-width="5"
+     id="path3" />
+  <path
+     d="M75 25 Q85 15 95 25"
+     fill="none"
+     stroke="#8B4513"
+     stroke-width="5"
+     id="path4" />
 </svg>
