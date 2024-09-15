@@ -25,10 +25,10 @@
      inkscape:zoom="6.88"
      inkscape:cx="50"
      inkscape:cy="50"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-width="1728"
+     inkscape:window-height="1051"
      inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-y="38"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg9" />
   <!-- Face -->
@@ -77,11 +77,12 @@
   <!-- Right Eyebrow -->
   <!-- Left Ear -->
   <path
-     d="M 12.957754,31.573134 22.116618,8.3112507 41.883544,23.617087 Z"
+     d="M 14.099269,36.480315 19.685523,10.01189 44.705299,22.372259 Z"
      fill="#ffa500"
      stroke="#000000"
      stroke-width="2"
-     id="path8" />
+     id="path8"
+     style="stroke-width:0;stroke-dasharray:none" />
   <path
      d="M 60.746902,52.881096 51.195885,66.038243 41.542647,52.95965 Z"
      fill="#ffa500"
@@ -90,9 +91,10 @@
      id="path8-0" />
   <!-- Right Ear -->
   <path
-     d="M 57.882981,21.194375 78.309274,6.7802635 86.427458,30.425456 Z"
+     d="M 54.25229,23.065931 77.164236,8.9665698 84.14384,35.140468 Z"
      fill="#ffa500"
      stroke="#000000"
      stroke-width="2"
-     id="path9" />
+     id="path9"
+     style="stroke-width:0;stroke-dasharray:none" />
 </svg>
