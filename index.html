@@ -261,6 +261,14 @@
         const fixedDeltaTime = 1000 / 60; // 60 FPS
         let accumulator = 0;
 
+        const characters = [
+            { name: 'Kitty', image: kittyImage, unlockScore: 0 },
+            { name: 'Dog', image: dogImage, unlockScore: 50 },
+            { name: 'Mouse', image: mouseImage, unlockScore: 100 },
+            { name: 'Pig', image: pigImage, unlockScore: 150 },
+            { name: 'Fox', image: foxImage, unlockScore: 200 }
+        ];
+
         function gameLoop(currentTime) {
             if (lastTime === 0) {
                 lastTime = currentTime;
@@ -408,13 +416,6 @@
                 ctx.textAlign = 'center';
                 ctx.fillText('Choose Your Character', canvas.width / 2, 60);
 
-                const characters = [
-                    { name: 'Kitty', image: kittyImage, unlockScore: 0 },
-                    { name: 'Dog', image: dogImage, unlockScore: 50 },
-                    { name: 'Mouse', image: mouseImage, unlockScore: 100 },
-                    { name: 'Pig', image: pigImage, unlockScore: 150 },
-                    { name: 'Fox', image: foxImage, unlockScore: 200 }
-                ];
                 const rows = 2;
                 const cols = 3;
 
