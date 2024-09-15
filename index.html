@@ -125,6 +125,9 @@
         }
 
         function restartGame(resetCharacter = true) {
+            const currentHighScore = Math.max(gameState.score, gameState.highScore);
+            localStorage.setItem('highScore', currentHighScore);
+            
             gameState = {
                 fallingFood: [],
                 character: {
@@ -135,7 +138,7 @@
                     speed: 300 // pixels per second
                 },
                 score: 0,
-                highScore: parseInt(localStorage.getItem('highScore')) || 0,
+                highScore: currentHighScore,
                 missedFood: 0,
                 isPaused: false,
                 isGameOver: false,
@@ -167,9 +170,6 @@
                 const y = e.clientY - rect.top;
                 
                 const characterSize = 90;
-                const selectionAreaSize = 160;
-
-                const characters = ['kitty', 'dog', 'mouse', 'pig', 'fox'];
                 const rows = 2;
                 const cols = 3;
 
@@ -182,8 +182,12 @@
 
                             if (x > centerX - characterSize / 2 && x < centerX + characterSize / 2 &&
                                 y > centerY - characterSize / 2 && y < centerY + characterSize / 2) {
-                                startGame(characters[index]);
-                                return;
+                                if (gameState.highScore >= characters[index].unlockScore) {
+                                    startGame(characters[index].name.toLowerCase());
+                                    return;
+                                } else {
+                                    console.log(`Character ${characters[index].name} is locked. Reach score ${characters[index].unlockScore} to unlock.`);
+                                }
                             }
                         }
                     }
@@ -405,11 +409,11 @@
                 ctx.fillText('Choose Your Character', canvas.width / 2, 60);
 
                 const characters = [
-                    { name: 'Kitty', image: kittyImage },
-                    { name: 'Dog', image: dogImage },
-                    { name: 'Mouse', image: mouseImage },
-                    { name: 'Pig', image: pigImage },
-                    { name: 'Fox', image: foxImage }
+                    { name: 'Kitty', image: kittyImage, unlockScore: 0 },
+                    { name: 'Dog', image: dogImage, unlockScore: 50 },
+                    { name: 'Mouse', image: mouseImage, unlockScore: 100 },
+                    { name: 'Pig', image: pigImage, unlockScore: 150 },
+                    { name: 'Fox', image: foxImage, unlockScore: 200 }
                 ];
                 const rows = 2;
                 const cols = 3;
@@ -423,6 +427,16 @@
 
                             ctx.drawImage(characters[index].image, centerX - 45, centerY - 45, 90, 90);
                             ctx.fillText(characters[index].name, centerX, centerY + 80);
+
+                            if (gameState.highScore < characters[index].unlockScore) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                                ctx.fillRect(centerX - 45, centerY - 45, 90, 90);
+                                ctx.fillStyle = 'white';
+                                ctx.font = '20px Arial';
+                                ctx.fillText('LOCKED', centerX, centerY);
+                                ctx.font = '16px Arial';
+                                ctx.fillText(`Score ${characters[index].unlockScore}`, centerX, centerY + 25);
+                            }
                         }
                     }
                 }
