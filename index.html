@@ -154,10 +154,14 @@
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                if (y > canvas.height / 2 - 100 && y < canvas.height / 2 + 100) {
-                    if (x < canvas.width / 2) {
+                const centerY = canvas.height / 2;
+                const characterSize = 90;
+                const selectionAreaSize = 160;
+
+                if (y > centerY - selectionAreaSize / 2 && y < centerY + selectionAreaSize / 2) {
+                    if (x > canvas.width / 4 - characterSize / 2 && x < canvas.width / 4 + characterSize / 2) {
                         startGame('kitty');
-                    } else {
+                    } else if (x > 3 * canvas.width / 4 - characterSize / 2 && x < 3 * canvas.width / 4 + characterSize / 2) {
                         startGame('dog');
                     }
                 }
@@ -239,20 +243,22 @@
             const deltaTime = currentTime - lastTime;
             lastTime = currentTime;
 
-            accumulator += deltaTime;
-
-            while (accumulator >= fixedDeltaTime) {
-                if (!gameState.isPaused && !gameState.isGameOver) {
-                    update(fixedDeltaTime / 1000); // Convert to seconds
-                }
-                accumulator -= fixedDeltaTime;
-            }
-
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw game objects
             draw();
+
+            if (!gameState.characterSelection) {
+                accumulator += deltaTime;
+
+                while (accumulator >= fixedDeltaTime) {
+                    if (!gameState.isPaused && !gameState.isGameOver) {
+                        update(fixedDeltaTime / 1000); // Convert to seconds
+                    }
+                    accumulator -= fixedDeltaTime;
+                }
+            }
 
             requestAnimationFrame(gameLoop);
         }
