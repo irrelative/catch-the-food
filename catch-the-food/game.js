@@ -3,6 +3,8 @@
 
     const MAX_MISSES = 10;
     const FIXED_STEP = 1 / 60;
+    const SPEED_INCREASE_PER_CATCH = 3;
+    const MAX_CATCH_SPEED_BONUS = 120;
     const STORAGE = {
         highScore: "catchTheFood.highScore",
         muted: "catchTheFood.muted"
@@ -187,12 +189,22 @@
         updateTargetCard();
     }
 
+    function catchSpeedBonus(score) {
+        const successfulCatches = Math.floor(score / 10);
+        return Math.min(MAX_CATCH_SPEED_BONUS, successfulCatches * SPEED_INCREASE_PER_CATCH);
+    }
+
     function difficultyForScore(score) {
-        if (score < 50) return { interval: 0.75, minimumSpeed: 110, maximumSpeed: 170 };
-        if (score < 100) return { interval: 0.65, minimumSpeed: 130, maximumSpeed: 200 };
-        if (score < 200) return { interval: 0.55, minimumSpeed: 150, maximumSpeed: 230 };
-        const bonus = Math.min(45, Math.floor((score - 200) / 50) * 5);
-        return { interval: 0.48, minimumSpeed: 170 + bonus, maximumSpeed: 250 + bonus };
+        const speedBonus = catchSpeedBonus(score);
+        let interval = 0.48;
+        if (score < 50) interval = 0.75;
+        else if (score < 100) interval = 0.65;
+        else if (score < 200) interval = 0.55;
+        return {
+            interval,
+            minimumSpeed: 110 + speedBonus,
+            maximumSpeed: 170 + speedBonus
+        };
     }
 
     function resizeCanvas() {
@@ -505,7 +517,12 @@
         const correct = food.type === state.target;
         createCatchEffects(food, correct);
         if (correct) {
+            const previousSpeedBonus = catchSpeedBonus(state.score);
             state.score += 10;
+            const speedIncrease = catchSpeedBonus(state.score) - previousSpeedBonus;
+            state.foods.forEach((fallingFood) => {
+                fallingFood.speed += speedIncrease;
+            });
             state.character.catchPulse = 0.28;
             if (state.score > state.highScore) {
                 state.highScore = state.score;
