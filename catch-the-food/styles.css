@@ -92,6 +92,19 @@ a:focus-visible {
     transform: rotate(-5deg);
 }
 
+.version-badge {
+    margin-right: auto;
+    padding: 4px 8px;
+    border: 2px solid rgba(63, 46, 40, 0.55);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    background: rgba(255, 253, 246, 0.62);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
 .topbar-actions {
     display: flex;
     gap: 8px;
@@ -565,6 +578,11 @@ kbd {
     .brand-mark {
         width: 32px;
         height: 32px;
+    }
+
+    .version-badge {
+        padding: 3px 6px;
+        font-size: 0.6rem;
     }
 
     .icon-button {

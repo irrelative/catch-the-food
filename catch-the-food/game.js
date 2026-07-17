@@ -49,6 +49,7 @@
     const resumeButton = document.getElementById("resumeButton");
     const muteButton = document.getElementById("muteButton");
     const muteIcon = document.getElementById("muteIcon");
+    const gameVersion = document.getElementById("gameVersion");
     const playAgainButton = document.getElementById("playAgainButton");
     const chooseCharacterButton = document.getElementById("chooseCharacterButton");
     const touchControls = document.getElementById("touchControls");
@@ -156,6 +157,11 @@
     }
 
     const sounds = new SoundBus();
+
+    const runningVersion = window.CATCH_THE_FOOD_VERSION || "1.0.dev";
+    gameVersion.textContent = `v${runningVersion}`;
+    gameVersion.setAttribute("aria-label", `Game version ${runningVersion}`);
+    document.documentElement.dataset.gameVersion = runningVersion;
 
     function loadImage(src) {
         const image = new Image();
