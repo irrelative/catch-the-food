@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Carrot">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#ef8734" d="M36 42c17-9 39-9 56 0-5 29-14 54-28 77-14-23-23-48-28-77Z"/>
+    <path fill="#ff9f43" d="M47 48c8-4 17-5 26-3-4 24-9 44-17 59" stroke="none"/>
+    <path d="m44 62 16 3m-9 17 18 3m-11 16 12 2m19-48-12 3" fill="none" stroke="#c9632c" stroke-width="4"/>
+    <path fill="#4f9652" d="M62 39C39 33 30 17 34 6c14 2 24 12 30 30C64 18 74 7 89 7c4 13-6 28-27 32Z"/>
+    <path fill="#67ad59" d="M64 37C51 21 52 8 64 2c12 8 12 21 0 35Z" stroke-width="4"/>
+  </g>
+</svg>

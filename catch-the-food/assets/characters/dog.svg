@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Friendly dog">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#bb733d" d="M33 40C19 32 8 39 10 56c2 19 10 31 25 30Zm62 0c14-8 25-1 23 16-2 19-10 31-25 30Z"/>
+    <path fill="#f0bf79" d="M31 55c0-26 15-39 33-39s33 13 33 39v25c0 20-14 34-33 34S31 100 31 80Z"/>
+    <path fill="#fff4d4" d="M44 74c0-13 9-22 20-22s20 9 20 22v8c0 14-9 24-20 24S44 96 44 82Z" stroke-width="4"/>
+    <path fill="#9a562f" d="M34 54c2-21 13-33 29-37-3 19-14 32-29 37Z" stroke-width="4"/>
+    <ellipse cx="49" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <ellipse cx="79" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <path fill="#51382d" d="M55 76c2-7 16-7 18 0-1 7-6 10-9 10s-8-3-9-10Z" stroke-width="3"/>
+    <path d="M64 86v8m0 0c-6 0-10-2-12-6m12 6c6 0 10-2 12-6" fill="none" stroke-width="3"/>
+    <path fill="#e9786e" d="M60 94h8v9c-2 4-6 4-8 0Z" stroke-width="3"/>
+  </g>
+</svg>

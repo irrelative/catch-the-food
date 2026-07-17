@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Orange kitty">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#ef9d35" d="M27 49 24 17l27 18a50 50 0 0 1 27 0l26-18-4 34a46 46 0 1 1-73-2Z"/>
+    <path fill="#f7c878" d="m30 24 3 19 13-8Zm68 0-4 20-12-9Z" stroke-width="4"/>
+    <path d="M50 37 45 25m27 12 6-12" fill="none"/>
+    <path fill="#fff8e8" d="M44 73c2-11 16-12 20-3 5-9 18-8 20 3 2 12-7 23-20 23S42 85 44 73Z" stroke-width="4"/>
+    <ellipse cx="47" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <ellipse cx="81" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <path fill="#e76d55" d="m64 70-6 4 6 4 6-4Z" stroke-width="3"/>
+    <path d="M64 79c-2 5-8 6-11 3m11-3c2 5 8 6 11 3" fill="none" stroke-width="3"/>
+    <path d="M31 73H14m18 8-16 5m81-13h17m-18 8 16 5" fill="none" stroke-width="3"/>
+  </g>
+</svg>

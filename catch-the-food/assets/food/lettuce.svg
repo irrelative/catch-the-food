@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Lettuce">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#67ad59" d="M64 113c-18 0-26-8-29-19-14 1-23-10-18-24-10-12-3-28 12-29 2-17 18-24 32-14 13-13 31-7 34 9 16 0 24 16 15 29 9 13 1 28-14 29-4 12-15 19-32 19Z"/>
+    <path fill="#91c973" d="M64 103c-12-13-16-29-13-48 14 6 23 19 24 40 0-24 8-41 25-49 2 27-9 48-36 57Z" stroke-width="4"/>
+    <path fill="#a9d889" d="M64 103C45 94 33 80 29 61c18 0 31 9 40 28-3-23 2-41 15-54 9 22 2 45-20 68Z" stroke-width="4"/>
+    <path d="M64 103 51 55m13 48 20-68M64 103 29 61m35 42 36-57" fill="none" stroke="#4f9652" stroke-width="3"/>
+  </g>
+</svg>

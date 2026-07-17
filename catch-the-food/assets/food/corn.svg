@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Corn">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#4f9652" d="M59 111C35 103 21 81 24 48c20 7 32 27 35 63Z"/>
+    <path fill="#67ad59" d="M69 111c24-8 38-30 35-63-20 7-32 27-35 63Z"/>
+    <path fill="#ffd457" d="M41 55c0-28 9-42 23-42s23 14 23 42c0 33-10 51-23 51S41 88 41 55Z"/>
+    <path d="M50 27h28M45 43h38M43 60h42M45 77h38M50 93h28M55 18l-7 75m25-75 7 75M64 14v91" fill="none" stroke="#e5a92e" stroke-width="3"/>
+    <path d="M31 58c10 14 20 31 27 53m39-53c-10 14-20 31-27 53" fill="none" stroke="#397d45" stroke-width="4"/>
+  </g>
+</svg>

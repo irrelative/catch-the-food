@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Red fox">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#df6d35" d="m24 56 1-40 30 24a49 49 0 0 1 18 0l30-24 1 40c8 31-11 58-40 58S16 87 24 56Z"/>
+    <path fill="#f2a064" d="m31 27 2 23 16-10Zm66 0-2 23-16-10Z" stroke-width="4"/>
+    <path fill="#fff4dd" d="M28 67c12 2 24 10 36 24 12-14 24-22 36-24-1 28-15 47-36 47S29 95 28 67Z" stroke-width="4"/>
+    <path fill="#f6c7a0" d="M44 76c2-10 13-14 20-6 7-8 18-4 20 6 2 14-8 25-20 25S42 90 44 76Z" stroke-width="4"/>
+    <path d="M42 57c6-4 11-4 16 0m12 0c5-4 10-4 16 0" fill="none" stroke-width="4"/>
+    <ellipse cx="50" cy="62" rx="4" ry="6" fill="#51382d" stroke="none"/>
+    <ellipse cx="78" cy="62" rx="4" ry="6" fill="#51382d" stroke="none"/>
+    <path fill="#51382d" d="m57 78 7-4 7 4c-1 7-4 10-7 10s-6-3-7-10Z" stroke-width="3"/>
+    <path d="M64 88c-3 5-7 6-11 4m11-4c3 5 7 6 11 4" fill="none" stroke-width="3"/>
+  </g>
+</svg>

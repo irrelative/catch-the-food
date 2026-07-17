@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Pink pig">
+  <g stroke="#51382d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#e9899c" d="M31 46 19 20c19-1 31 7 35 21Zm66 0 12-26c-19-1-31 7-35 21Z"/>
+    <path fill="#f2a6b2" d="M24 68c0-31 17-49 40-49s40 18 40 49c0 28-17 46-40 46S24 96 24 68Z"/>
+    <path d="M42 48c5-5 10-5 15-1m14 0c5-4 10-4 15 1" fill="none" stroke-width="4"/>
+    <ellipse cx="49" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <ellipse cx="79" cy="61" rx="5" ry="7" fill="#51382d" stroke="none"/>
+    <path fill="#e8798f" d="M43 76c0-10 8-17 21-17s21 7 21 17-8 18-21 18-21-8-21-18Z" stroke-width="5"/>
+    <ellipse cx="56" cy="76" rx="4" ry="6" fill="#51382d" stroke="none"/>
+    <ellipse cx="72" cy="76" rx="4" ry="6" fill="#51382d" stroke="none"/>
+    <path d="M55 101c6 4 12 4 18 0" fill="none" stroke-width="3"/>
+  </g>
+</svg>

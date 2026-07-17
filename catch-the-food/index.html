@@ -1,559 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f7b85b">
+    <meta name="description" content="Catch the matching food, protect the picnic, and unlock a cast of hungry animal friends.">
     <title>Catch The Food</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        h1 {
-            text-align: center;
-            margin: 10px 0;
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: calc(100% - 50px); /* Adjust based on header height */
-        }
-        #controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        #controls button {
-            margin-left: 10px;
-            padding: 5px 10px;
-            font-size: 16px;
-        }
-    </style>
+    <link rel="icon" href="assets/food/tomato.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Catch The Food</h1>
-    <div id="controls" style="display: none;">
-        <button id="pauseBtn">Pause</button>
-        <button id="restartBtn">Restart</button>
-    </div>
-    <canvas id="gameCanvas"></canvas>
-    <audio id="targetSound" src="target.wav"></audio>
-    <audio id="splatSound" src="splat.wav"></audio>
-    <script>
-        // Get the canvas element
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+    <main class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="./" aria-label="Catch The Food home">
+                <span class="brand-mark" aria-hidden="true">🍎</span>
+                <span>Catch The Food</span>
+            </a>
+            <div class="topbar-actions">
+                <button class="icon-button" id="pauseButton" type="button" aria-label="Pause game" hidden>
+                    <span aria-hidden="true">Ⅱ</span>
+                </button>
+                <button class="icon-button" id="muteButton" type="button" aria-label="Mute sound" aria-pressed="false">
+                    <span id="muteIcon" aria-hidden="true">♪</span>
+                </button>
+            </div>
+        </header>
 
-        console.log('Canvas element:', canvas);
-        console.log('Canvas context:', ctx);
+        <section class="game-frame" aria-label="Catch The Food game">
+            <canvas id="gameCanvas" aria-hidden="true"></canvas>
 
-        // Set canvas size
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight - 50; // Adjust for header
-            console.log('Canvas resized:', canvas.width, 'x', canvas.height);
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+            <section class="hud" id="hud" aria-label="Game status" hidden>
+                <div class="score-card">
+                    <span class="hud-label">Score</span>
+                    <strong id="scoreValue">0</strong>
+                </div>
 
-        // Load character images
-        const kittyImage = new Image();
-        kittyImage.src = 'kitty.svg';
-        const dogImage = new Image();
-        dogImage.src = 'dog.svg';
-        const mouseImage = new Image();
-        mouseImage.src = 'mouse.svg';
-        const pigImage = new Image();
-        pigImage.src = 'pig.svg';
-        const foxImage = new Image();
-        foxImage.src = 'fox.svg';
+                <div class="target-card" id="targetCard">
+                    <span class="target-label">Catch</span>
+                    <img id="targetImage" alt="">
+                    <strong id="targetName">Food</strong>
+                </div>
 
-        let selectedCharacter = null;
+                <div class="score-card score-card-right">
+                    <span class="hud-label">Best</span>
+                    <strong id="highScoreValue">0</strong>
+                </div>
 
-        // Game state
-        let gameState = {
-            fallingFood: [],
-            character: {
-                x: canvas.width / 2 - 45, // Center horizontally
-                y: canvas.height - 225,
-                width: 90,
-                height: 90,
-                speed: 300 // pixels per second
-            },
-            score: 0,
-            highScore: parseInt(localStorage.getItem('highScore')) || 0,
-            missedFood: 0,
-            isPaused: false,
-            isGameOver: false,
-            groundColors: [],
-            targetFood: '',
-            newHighScore: false,
-            foodSpawnTimer: 0,
-            foodSpawnInterval: 0.5, // Spawn food every 0.5 seconds
-            characterSelection: true
-        };
+                <div class="miss-meter" id="missMeter" aria-label="Ten chances remaining"></div>
+            </section>
 
-        // Initialize ground colors
-        for (let i = 0; i < canvas.width; i++) {
-            gameState.groundColors.push('#8B4513');
-        }
+            <section class="screen-card selection-card" id="selectionScreen" aria-labelledby="selectionTitle">
+                <p class="eyebrow">Picnic patrol</p>
+                <h1 id="selectionTitle">Choose your catcher</h1>
+                <p class="instructions">Catch the food shown at the top. Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Don’t miss ten targets!</p>
+                <p class="best-score">Your best score: <strong id="selectionHighScore">0</strong></p>
+                <div class="character-grid" id="characterGrid"></div>
+            </section>
 
-        // Get control buttons
-        const pauseBtn = document.getElementById('pauseBtn');
-        const restartBtn = document.getElementById('restartBtn');
+            <section class="screen-card compact-card" id="pauseScreen" aria-labelledby="pauseTitle" hidden>
+                <p class="eyebrow">Taking a breather</p>
+                <h2 id="pauseTitle">Paused</h2>
+                <button class="primary-button" id="resumeButton" type="button">Keep playing</button>
+            </section>
 
-        // Event listeners for buttons
-        pauseBtn.addEventListener('click', togglePause);
-        restartBtn.addEventListener('click', restartGame);
+            <section class="screen-card compact-card" id="gameOverScreen" aria-labelledby="gameOverTitle" hidden>
+                <p class="eyebrow" id="gameOverEyebrow">Picnic complete</p>
+                <h2 id="gameOverTitle">Great catching!</h2>
+                <div class="final-score">
+                    <span>Final score</span>
+                    <strong id="finalScoreValue">0</strong>
+                </div>
+                <p id="gameOverMessage">Your animal friend is ready for another round.</p>
+                <div class="unlocks" id="unlockMessage" hidden></div>
+                <div class="button-row">
+                    <button class="primary-button" id="playAgainButton" type="button">Play again</button>
+                    <button class="secondary-button" id="chooseCharacterButton" type="button">Choose character</button>
+                </div>
+            </section>
 
-        function togglePause() {
-            gameState.isPaused = !gameState.isPaused;
-            pauseBtn.textContent = gameState.isPaused ? 'Resume' : 'Pause';
-        }
+            <div class="touch-controls" id="touchControls" aria-label="Movement controls" hidden>
+                <button id="moveLeftButton" type="button" aria-label="Move left"><span aria-hidden="true">←</span></button>
+                <button id="moveRightButton" type="button" aria-label="Move right"><span aria-hidden="true">→</span></button>
+            </div>
+        </section>
 
-        function startGame(character) {
-            console.log('Starting game with character:', character);
-            selectedCharacter = character;
-            gameState.characterSelection = false;
-            document.getElementById('controls').style.display = 'block';
-            restartGame(false);
-            lastTime = 0; // Reset lastTime to restart the game loop properly
-            console.log('Selected character after starting game:', selectedCharacter);
-        }
+        <p class="keyboard-hint">Move with arrows or A/D · Pause with P or Escape</p>
+        <p class="sr-only" id="liveStatus" aria-live="polite" aria-atomic="true"></p>
+    </main>
 
-        function restartGame(resetCharacter = true) {
-            const currentHighScore = Math.max(gameState.score, gameState.highScore);
-            localStorage.setItem('highScore', currentHighScore);
-            
-            gameState = {
-                fallingFood: [],
-                character: {
-                    x: canvas.width / 2 - 45, // Center horizontally
-                    y: canvas.height - 225,
-                    width: 90,
-                    height: 90,
-                    speed: 300 // pixels per second
-                },
-                score: 0,
-                highScore: currentHighScore,
-                missedFood: 0,
-                isPaused: false,
-                isGameOver: false,
-                groundColors: [],
-                targetFood: foodTypes[Math.floor(Math.random() * foodTypes.length)],
-                newHighScore: false,
-                foodSpawnTimer: 0,
-                foodSpawnInterval: 0.5, // Spawn food every 0.5 seconds
-                characterSelection: resetCharacter
-            };
-            pauseBtn.textContent = 'Pause';
-            // Reinitialize ground colors
-            for (let i = 0; i < canvas.width; i++) {
-                gameState.groundColors.push('#8B4513');
-            }
-            if (resetCharacter) {
-                selectedCharacter = null;
-                document.getElementById('controls').style.display = 'none';
-            } else {
-                document.getElementById('controls').style.display = 'block';
-            }
-        }
-
-        // Function to handle character selection
-        function handleCharacterSelection(x, y) {
-            if (gameState.characterSelection) {
-                const characterSize = 90;
-                const rows = 2;
-                const cols = 3;
-
-                for (let i = 0; i < rows; i++) {
-                    for (let j = 0; j < cols; j++) {
-                        const index = i * cols + j;
-                        if (index < characters.length) {
-                            const centerX = (j + 1) * canvas.width / (cols + 1);
-                            const centerY = (i + 1) * canvas.height / (rows + 1);
-
-                            if (x > centerX - characterSize / 2 && x < centerX + characterSize / 2 &&
-                                y > centerY - characterSize / 2 && y < centerY + characterSize / 2) {
-                                if (gameState.highScore >= characters[index].unlockScore) {
-                                    startGame(characters[index].name.toLowerCase());
-                                    return;
-                                } else {
-                                    console.log(`Character ${characters[index].name} is locked. Reach score ${characters[index].unlockScore} to unlock.`);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Add event listener for character selection (mouse click)
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            handleCharacterSelection(x, y);
-        });
-
-        // Add event listener for character selection (touch)
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            handleCharacterSelection(x, y);
-        }, { passive: false });
-
-        const foodTypes = ['corn', 'tomato', 'carrot', 'lettuce'];
-        const foodImages = {};
-        const foodColors = {
-            'corn': '#FFD700',
-            'tomato': '#FF6347',
-            'carrot': '#FFA500',
-            'lettuce': '#90EE90'
-        };
-
-        // Load food SVGs
-        foodTypes.forEach(type => {
-            foodImages[type] = new Image();
-            foodImages[type].src = `${type}.svg`;
-        });
-
-        function createFallingFood() {
-            const type = foodTypes[Math.floor(Math.random() * foodTypes.length)];
-            return {
-                type: type,
-                x: Math.random() * (canvas.width - 40),
-                y: -50,
-                width: 40,
-                height: 40,
-                speed: 120 + Math.random() * 120 // 120-240 pixels per second
-            };
-        }
-
-        // Keyboard state
-        let keys = {};
-
-        // Event listeners for keyboard input
-        window.addEventListener('keydown', (e) => {
-            keys[e.code] = true;
-        });
-        window.addEventListener('keyup', (e) => {
-            keys[e.code] = false;
-        });
-
-        // Touch controls
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const touch = e.touches[0];
-            const canvasRect = canvas.getBoundingClientRect();
-            const canvasCenterX = canvasRect.left + canvasRect.width / 2;
-
-            if (touch.clientX < canvasCenterX) {
-                keys['ArrowLeft'] = true;
-                keys['ArrowRight'] = false;
-            } else {
-                keys['ArrowLeft'] = false;
-                keys['ArrowRight'] = true;
-            }
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            keys['ArrowLeft'] = false;
-            keys['ArrowRight'] = false;
-        }, { passive: false });
-
-        let lastTime = 0;
-        const fixedDeltaTime = 1000 / 60; // 60 FPS
-        let accumulator = 0;
-
-        const characters = [
-            { name: 'Kitty', image: kittyImage, unlockScore: 0 },
-            { name: 'Dog', image: dogImage, unlockScore: 50 },
-            { name: 'Mouse', image: mouseImage, unlockScore: 100 },
-            { name: 'Pig', image: pigImage, unlockScore: 150 },
-            { name: 'Fox', image: foxImage, unlockScore: 200 }
-        ];
-
-        function gameLoop(currentTime) {
-            if (lastTime === 0) {
-                lastTime = currentTime;
-            }
-
-            const deltaTime = currentTime - lastTime;
-            lastTime = currentTime;
-
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw game objects
-            draw();
-
-            if (!gameState.characterSelection) {
-                accumulator += deltaTime;
-
-                while (accumulator >= fixedDeltaTime) {
-                    if (!gameState.isPaused && !gameState.isGameOver) {
-                        update(fixedDeltaTime / 1000); // Convert to seconds
-                    }
-                    accumulator -= fixedDeltaTime;
-                }
-            }
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Start the game loop when the page loads
-        window.addEventListener('load', () => {
-            console.log('Page loaded, starting game loop');
-            requestAnimationFrame(gameLoop);
-        });
-
-        function update(dt) {
-            // Move character based on keyboard input
-            if (keys['ArrowLeft'] && gameState.character.x > 0) {
-                gameState.character.x -= gameState.character.speed * dt;
-            }
-            if (keys['ArrowRight'] && gameState.character.x < canvas.width - gameState.character.width) {
-                gameState.character.x += gameState.character.speed * dt;
-            }
-
-            // Add new falling food
-            gameState.foodSpawnTimer += dt;
-            if (gameState.foodSpawnTimer >= gameState.foodSpawnInterval) {
-                gameState.fallingFood.push(createFallingFood());
-                gameState.foodSpawnTimer = 0;
-            }
-
-            // Update falling food
-            gameState.fallingFood.forEach((food, index) => {
-                food.y += food.speed * dt;
-
-                // Check for collision with character
-                if (food.y + food.height > gameState.character.y &&
-                    food.y < gameState.character.y + gameState.character.height &&
-                    food.x + food.width > gameState.character.x &&
-                    food.x < gameState.character.x + gameState.character.width) {
-                    if (food.type === gameState.targetFood) {
-                        gameState.score += 10;
-                        // Play sound when target food is caught
-                        document.getElementById('targetSound').play();
-                        // Change target food after successful catch
-                        gameState.targetFood = foodTypes[Math.floor(Math.random() * foodTypes.length)];
-                    }
-                    gameState.fallingFood.splice(index, 1);
-                }
-
-                // Squish food if it reaches the ground
-                if (food.y + food.height >= canvas.height - 100) {
-                    food.height = Math.max(5, food.height - food.speed * dt);
-                    food.width = Math.min(60, food.width + food.speed * dt);
-                    food.y = canvas.height - 100 - food.height;
-
-                    // Change ground color
-                    const groundX = Math.floor(food.x + food.width / 2);
-                    const colorWidth = Math.floor(food.width / 2);
-                    for (let i = Math.max(0, groundX - colorWidth); i < Math.min(canvas.width, groundX + colorWidth); i++) {
-                        gameState.groundColors[i] = foodColors[food.type];
-                    }
-
-                    // Remove food if it's fully squished
-                    if (food.height <= 5) {
-                        gameState.fallingFood.splice(index, 1);
-                        // Play splat sound when food hits the ground
-                        document.getElementById('splatSound').play();
-                        if (food.type === gameState.targetFood) {
-                            gameState.missedFood++;
-                            
-                            if (gameState.missedFood >= 10) {
-                                gameState.isGameOver = true;
-                                if (gameState.score > gameState.highScore) {
-                                    gameState.highScore = gameState.score;
-                                    localStorage.setItem('highScore', gameState.highScore);
-                                    gameState.newHighScore = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function drawCharacter() {
-            let characterImage;
-            switch (selectedCharacter) {
-                case 'kitty':
-                    characterImage = kittyImage;
-                    break;
-                case 'dog':
-                    characterImage = dogImage;
-                    break;
-                case 'mouse':
-                    characterImage = mouseImage;
-                    break;
-                case 'pig':
-                    characterImage = pigImage;
-                    break;
-                case 'fox':
-                    characterImage = foxImage;
-                    break;
-                default:
-                    console.log('Invalid character:', selectedCharacter);
-                    return;
-            }
-            if (characterImage.complete) {
-                ctx.drawImage(characterImage, gameState.character.x, gameState.character.y, gameState.character.width, gameState.character.height);
-            } else {
-                console.log('Character image not loaded:', selectedCharacter);
-            }
-        }
-
-        function draw() {
-            // Draw sky
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            if (gameState.characterSelection) {
-                // Draw character selection screen
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white';
-                ctx.font = '40px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Choose Your Character', canvas.width / 2, 60);
-
-                const rows = 2;
-                const cols = 3;
-
-                for (let i = 0; i < rows; i++) {
-                    for (let j = 0; j < cols; j++) {
-                        const index = i * cols + j;
-                        if (index < characters.length) {
-                            const centerX = (j + 1) * canvas.width / (cols + 1);
-                            const centerY = (i + 1) * canvas.height / (rows + 1);
-
-                            ctx.drawImage(characters[index].image, centerX - 45, centerY - 45, 90, 90);
-                            ctx.fillText(characters[index].name, centerX, centerY + 80);
-
-                            if (gameState.highScore < characters[index].unlockScore) {
-                                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                                ctx.fillRect(centerX - 45, centerY - 45, 90, 90);
-                                ctx.fillStyle = 'white';
-                                ctx.font = '20px Arial';
-                                ctx.fillText('LOCKED', centerX, centerY);
-                                ctx.font = '16px Arial';
-                                ctx.fillText(`Score ${characters[index].unlockScore}`, centerX, centerY + 25);
-                            }
-                        }
-                    }
-                }
-
-                ctx.textAlign = 'left';
-                return;
-            }
-
-            // Draw colored ground
-            for (let i = 0; i < canvas.width; i++) {
-                ctx.fillStyle = gameState.groundColors[i];
-                ctx.fillRect(i, canvas.height - 100, 1, 100);
-            }
-
-            // Draw grass
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(0, canvas.height - 120, canvas.width, 20);
-
-            // Draw character
-            drawCharacter();
-
-            // Draw falling food
-            gameState.fallingFood.forEach(food => {
-                ctx.drawImage(foodImages[food.type], food.x, food.y, food.width, food.height);
-            });
-
-            // Draw target food
-            ctx.fillStyle = 'white';
-            ctx.fillRect(10, 10, 60, 60);
-            ctx.drawImage(foodImages[gameState.targetFood], 20, 20, 40, 40);
-            ctx.fillStyle = 'black';
-            ctx.font = '16px Arial';
-            ctx.fillText('Target:', 10, 90);
-
-            // Draw score and missed food count
-            ctx.fillStyle = 'black';
-            ctx.font = '20px Arial';
-            ctx.fillText(`Score: ${gameState.score}`, 80, 30);
-            ctx.fillText(`High Score: ${gameState.highScore}`, 80, 60);
-            ctx.fillText(`Missed: ${gameState.missedFood}`, 80, 90);
-
-            // Draw pause message
-            if (gameState.isPaused) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white';
-                ctx.font = '40px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
-                ctx.textAlign = 'left';
-            }
-
-            // Draw game over message
-            if (gameState.isGameOver) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white';
-                ctx.font = '40px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 60);
-                ctx.font = '30px Arial';
-                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2);
-                if (gameState.newHighScore) {
-                    ctx.fillStyle = 'yellow';
-                    ctx.fillText('New High Score!', canvas.width / 2, canvas.height / 2 + 40);
-                    ctx.fillStyle = 'white';
-                }
-                ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 80);
-                ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 120);
-                ctx.textAlign = 'left';
-            }
-
-            // Draw touch control indicators
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.fillRect(0, canvas.height - 150, canvas.width / 2, 150);
-                ctx.fillRect(canvas.width / 2, canvas.height - 150, canvas.width / 2, 150);
-                
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.font = '20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('←', canvas.width / 4, canvas.height - 75);
-                ctx.fillText('→', 3 * canvas.width / 4, canvas.height - 75);
-                ctx.textAlign = 'left';
-            }
-        }
-    </script>
-    <script>
-        // Start the game loop when the page loads
-        window.addEventListener('load', () => {
-            console.log('Page loaded, starting game loop');
-            requestAnimationFrame(gameLoop);
-        });
-    </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BMD43MJGNP"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-      gtag('config', 'G-BMD43MJGNP');
-    </script>
+    <script src="game.js" defer></script>
 </body>
 </html>
