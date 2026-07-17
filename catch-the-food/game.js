@@ -828,6 +828,9 @@
     playAgainButton.addEventListener("click", playAgain);
     chooseCharacterButton.addEventListener("click", showSelection);
     coarsePointer.addEventListener("change", updateTouchControls);
+    ["selectstart", "contextmenu", "dragstart"].forEach((eventName) => {
+        frameElement.addEventListener(eventName, (event) => event.preventDefault());
+    });
     setButtonDirection(moveLeftButton, "left");
     setButtonDirection(moveRightButton, "right");
 
